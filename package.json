@@ -6,7 +6,8 @@
     "browserify": "1.17.3"
   },
   "devDependencies": {
-    "mocha": "1.8.1"
+    "mocha": "1.8.1",
+    "sandboxed-module-strict-mode": "0.1.4"
   },
   "scripts": {
     "test": "mocha --harmony --recursive"
