@@ -5,7 +5,7 @@
  */
 "use strict";
 
-var browserify = require( 'browserify' ),
+var bundle = require( './bundle' ),
     events = require( 'events' ),
     path = require( 'path' );
 
@@ -19,6 +19,8 @@ var crosstalkify = function crosstalkify ( options ) {
     directory : 
        options.directory ? path.resolve( options.directory ) : process.cwd()
   };
+
+  emitter.bundle = bundle;
 
   return emitter;
 

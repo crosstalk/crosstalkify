@@ -21,6 +21,14 @@ describe( 'crosstalkify', function () {
     assert( crosstalkify() instanceof events.EventEmitter );
   });
 
+  [ 'bundle' ].forEach( function ( method ) {
+
+    it( "should have '" + method + "' method", function () {
+      assert.strictEqual( crosstalkify()[ method ], require( '../' + method ) );
+    });
+
+  });
+
   it( "should have a configuration object", function () {
     assert.equal( typeof( crosstalkify().configuration ), 'object' );
   });
