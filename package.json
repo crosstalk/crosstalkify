@@ -2,8 +2,21 @@
   "name": "crosstalkify",
   "version": "0.1.0",
   "description": "Crosstalk packaging for Node.js projects",
-  "bin": "./bin/crosstalkify",
-  "main": "./index.js",
+  "bin": "bin/crosstalkify",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --harmony --recursive"
+  },  
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:crosstalk/crosstalkify.git"
+  },
+  "keywords": [
+    "crosstalk",
+    "packaging",
+    "development",
+    "browserify"
+  ],
   "dependencies": {
     "browserify": "https://github.com/tristanls/node-browserify/tarball/master",
     "optimist": "0.3.5"
@@ -12,11 +25,9 @@
     "mocha": "1.8.1",
     "sandboxed-module-strict-mode": "0.1.4"
   },
-  "scripts": {
-    "test": "mocha --harmony --recursive"
-  },
   "author": "Crosstalk Systems Inc. <developers@crxtalk.com>",
   "maintainers": [
     "Tristan Slominski <tristan.slominski@gmail.com>"
-  ]
+  ],
+  "license": "MIT"
 }
