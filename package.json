@@ -1,12 +1,12 @@
 {
   "name": "crosstalkify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Crosstalk packaging for Node.js projects",
   "bin": "bin/crosstalkify",
   "main": "index.js",
   "scripts": {
     "test": "mocha --harmony --recursive"
-  },  
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:crosstalk/crosstalkify.git"
