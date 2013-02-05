@@ -8,6 +8,11 @@
 var browserify = require( 'browserify' ),
     path = require( 'path' );
 
+var CROSSTALK_MODULES = [ 'assert', 'async', 'clone', 'config', 'crypto', 
+      'data2xml', 'dateformat', 'env', 'http', 'https', 'inspect', 'logger', 
+      'multipart', 'querystring', 'self', 'semver', 'underscore', 'url', 'uuid', 
+      'xml2js' ];
+
 var bundle = function bundle () {
 
   var crosstalkify = this;
@@ -22,7 +27,17 @@ var bundle = function bundle () {
   var entry = path.resolve( path.join( crosstalkify.configuration.directory,
      entryFileName ) );
 
-  return browserify( entry ).bundle();
+  var code = browserify( entry )
+              .ignore( CROSSTALK_MODULES )
+              .prepend( "var __require = require;" );
+
+  CROSSTALK_MODULES.forEach( function ( crosstalkModule ) {
+    code.insert( "require.define('" + crosstalkModule
+       + "',function(require,module,exports){module.exports = __require('"
+       + crosstalkModule + "');});" );
+  });
+  
+  return code.bundle();
 
 }; // bundle
 
