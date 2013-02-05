@@ -1,0 +1,27 @@
+#! /usr/bin/env node
+
+var crosstalkify = require( '../' );
+
+var argv = require( 'optimist' )
+    .usage( 'Usage: crosstalkify' )
+    .wrap( 80 )
+    .option( 'directory', {
+      alias : 'd',
+      desc : 'Project directory to crosstalkify.\n'
+          + 'The project directory is the one with package.json in it.\n'
+          + 'If unspecified, current working directory will be used.'
+    })
+    .option( 'help', {
+      alias : 'h',
+      desc : 'Show this message'
+    })
+    .check( function ( argv ) {
+      if ( argv.help ) throw '';
+    })
+    .argv;
+
+var worker = crosstalkify( {
+  directory : argv.directory
+});
+
+console.log( require( 'util' ).inspect( worker, false, null ) );
