@@ -6,15 +6,10 @@
 "use strict";
 
 var assert = require( 'assert' ),
-    bundle = require( '../bundle' ),
     path = require( 'path' ),
     sandbox = require( 'sandboxed-module-strict-mode' );
 
 describe( 'bundle()', function () {
-
-  it( "should be implemented", function () {
-    assert.fail();
-  });
 
   let BROWSERIFY, CROSSTALKIFY, CROSSTALK_MODULES;
 
@@ -29,6 +24,7 @@ describe( 'bundle()', function () {
       return BROWSERIFY;
     };
 
+    BROWSERIFY.addEntry = function () { return BROWSERIFY; };
     BROWSERIFY.bundle = function () {};
     BROWSERIFY.ignore = function () { return BROWSERIFY; };
     BROWSERIFY.insert = function () { return BROWSERIFY; };
@@ -42,71 +38,38 @@ describe( 'bundle()', function () {
 
   });
 
-  it( "should provide configuration.directory/index.js as entry point to " +
-     "browserify if package.json does not contain 'main'", function ( done ) {
+  it( "should call ignore before addEntry", function ( done ) {
 
     CROSSTALKIFY.configuration.directory = 
        path.resolve( path.join( __dirname, 'no-main' ) );
 
-    let oldBrowserify = BROWSERIFY;
-    BROWSERIFY = function ( entry ) {
+    let addEntryCalled = false;
 
-      assert.equal( entry, 
-         path.resolve( 
-            path.join( CROSSTALKIFY.configuration.directory, 'index.js' ) 
-         ) 
-      );
+    BROWSERIFY.ignore = function () {
+
+      assert( ! addEntryCalled );
       done();
       return BROWSERIFY;
+
     };
 
-    Object.keys( oldBrowserify ).forEach( function ( key ) {
-      BROWSERIFY[ key ] = oldBrowserify[ key ];
-    });
+    BROWSERIFY.addEntry = function () {
+
+      addEntryCalled = true;
+      return BROWSERIFY;
+
+    };
 
     let SANDBOX = {
       requires : {
         'browserify' : BROWSERIFY
-      }
+      },
+      strictMode : true
     };
 
     let bundle = sandbox.require( '../bundle', SANDBOX );
 
-    bundle.call( CROSSTALKIFY );
-
-  });
-
-  it( "should provide configuration.directory/<main> as entry point to " +
-     "browserify if package.json contains 'main'", function ( done ) {
-
-    CROSSTALKIFY.configuration.directory = 
-       path.resolve( path.join( __dirname, 'with-main' ) );
-
-    let oldBrowserify = BROWSERIFY;
-    BROWSERIFY = function ( entry ) {
-
-      assert.equal( entry, 
-         path.resolve( 
-            path.join( CROSSTALKIFY.configuration.directory, 'myEntry.js' ) 
-         ) 
-      );
-      done();
-      return BROWSERIFY;
-    };
-
-    Object.keys( oldBrowserify ).forEach( function ( key ) {
-      BROWSERIFY[ key ] = oldBrowserify[ key ];
-    });
-
-    let SANDBOX = {
-      requires : {
-        'browserify' : BROWSERIFY
-      }
-    };
-
-    let bundle = sandbox.require( '../bundle', SANDBOX );
-
-    bundle.call( CROSSTALKIFY );
+    bundle.call( CROSSTALKIFY );    
 
   });
 
@@ -138,7 +101,65 @@ describe( 'bundle()', function () {
 
   });
 
-  it( "should return output of .bundle()", function () {
+  it( "should provide configuration.directory/index.js as entry point to " +
+     "browserify if package.json does not contain 'main'", function ( done ) {
+
+    CROSSTALKIFY.configuration.directory = 
+       path.resolve( path.join( __dirname, 'no-main' ) );
+
+    BROWSERIFY.addEntry = function ( entry ) {
+
+      assert.equal( entry, 
+         path.resolve( 
+            path.join( CROSSTALKIFY.configuration.directory, 'index.js' ) 
+         ) 
+      );
+      done();
+      return BROWSERIFY;
+    };
+
+    let SANDBOX = {
+      requires : {
+        'browserify' : BROWSERIFY
+      }
+    };
+
+    let bundle = sandbox.require( '../bundle', SANDBOX );
+
+    bundle.call( CROSSTALKIFY );
+
+  });
+
+  it( "should provide configuration.directory/<main> as entry point to " +
+     "browserify if package.json contains 'main'", function ( done ) {
+
+    CROSSTALKIFY.configuration.directory = 
+       path.resolve( path.join( __dirname, 'with-main' ) );
+
+    BROWSERIFY.addEntry = function ( entry ) {
+
+      assert.equal( entry, 
+         path.resolve( 
+            path.join( CROSSTALKIFY.configuration.directory, 'myEntry.js' ) 
+         ) 
+      );
+      done();
+      return BROWSERIFY;
+    };
+
+    let SANDBOX = {
+      requires : {
+        'browserify' : BROWSERIFY
+      }
+    };
+
+    let bundle = sandbox.require( '../bundle', SANDBOX );
+
+    bundle.call( CROSSTALKIFY );
+
+  });
+
+  it( "should return output of .bundle() with \"strict mode\";\\n prepended", function () {
 
     CROSSTALKIFY.configuration.directory = 
        path.resolve( path.join( __dirname, 'no-main' ) );
@@ -154,7 +175,8 @@ describe( 'bundle()', function () {
 
     let bundle = sandbox.require( '../bundle', SANDBOX );
 
-    assert.equal( 'stuff', bundle.call( CROSSTALKIFY ) );
+    let code = bundle.call( CROSSTALKIFY );
+    assert( code.match( /^"strict mode";\nstuff$/ ), code );    
 
   });
 
@@ -198,7 +220,7 @@ describe( 'bundle()', function () {
 
       callCount++;
       return BROWSERIFY;
-      
+
     };   
 
     let SANDBOX = {

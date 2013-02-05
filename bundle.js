@@ -27,8 +27,9 @@ var bundle = function bundle () {
   var entry = path.resolve( path.join( crosstalkify.configuration.directory,
      entryFileName ) );
 
-  var code = browserify( entry )
+  var code = browserify()
               .ignore( CROSSTALK_MODULES )
+              .addEntry( entry )
               .prepend( "var __require = require;" );
 
   CROSSTALK_MODULES.forEach( function ( crosstalkModule ) {
@@ -37,7 +38,7 @@ var bundle = function bundle () {
        + crosstalkModule + "');});" );
   });
   
-  return code.bundle();
+  return '"strict mode";\n' + code.bundle();
 
 }; // bundle
 
