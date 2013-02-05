@@ -8,8 +8,7 @@
 var assert = require( 'assert' ),
     crosstalkify = require( '../index' ),
     events = require( 'events' ),
-    path = require( 'path' ),
-    sandbox = require( 'sandboxed-module-strict-mode' );
+    path = require( 'path' );
 
 describe( 'crosstalkify', function () {
 
