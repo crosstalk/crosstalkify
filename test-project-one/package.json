@@ -1,0 +1,22 @@
+{
+  "name": "crosstalkify-test-project-one",
+  "version": "0.1.0",
+  "description": "Crosstalkify project 'one' for integration testing",
+  "devDependencies": {
+    "crosstalk-ide": "2.x.x",
+    "mocha": "1.8.1",
+    "sandboxed-module-strict-mode": "0.1.4"
+  },
+  "scripts": {
+    "integration": "node --harmony test-integration/all.js",
+    "test": "mocha --harmony --recursive"
+  },
+  "author": "Crosstalk Systems Inc. <developers@crxtalk.com>",
+  "maintainers": [
+    "Tristan Slominski <tristan.slominski@gmail.com>"
+  ],
+  "crosstalk": {
+    "type": "worker"
+  },
+  "private": true
+}
