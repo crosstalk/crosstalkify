@@ -178,32 +178,7 @@ describe( 'bundle()', function () {
     let bundle = sandbox.require( '../bundle', SANDBOX );
 
     let code = bundle.call( CROSSTALKIFY );
-    assert( code.match( /^"strict mode";\nstuff$/ ), code );    
-
-  });
-
-  it( "should prepend var __require = require to bundle", function ( done ) {
-
-    BROWSERIFY.prepend = function ( src ) {
-
-      assert.equal( src, "var __require = require;" );
-      done();
-      return BROWSERIFY;
-
-    };
-
-    CROSSTALKIFY.configuration.directory = 
-       path.resolve( path.join( __dirname, 'no-main' ) );    
-
-    let SANDBOX = {
-      requires : {
-        'browserify' : BROWSERIFY
-      }
-    };
-
-    let bundle = sandbox.require( '../bundle', SANDBOX );
-
-    bundle.call( CROSSTALKIFY );
+    assert( code.match( /^"strict mode";\nvar __require = require;\nstuff$/ ), code );    
 
   });
 

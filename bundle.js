@@ -29,8 +29,7 @@ var bundle = function bundle () {
 
   var code = browserify()
               .ignore( CROSSTALK_MODULES )
-              .addEntry( entry )
-              .prepend( "var __require = require;" );
+              .addEntry( entry );
 
   CROSSTALK_MODULES.forEach( function ( crosstalkModule ) {
     code.insert( "require.define('" + crosstalkModule
@@ -45,7 +44,7 @@ var bundle = function bundle () {
 
   });
   
-  var result = '"strict mode";\n' + code.bundle();
+  var result = '"strict mode";\n' + 'var __require = require;\n' + code.bundle();
   if ( Object.keys( code.errors ).length == 0 ) crosstalkify.ok = true;
 
   return result;
