@@ -212,11 +212,18 @@ describe( 'bundle()', function () {
 
     let callCount = 0;
 
+    let modulesToCheckOff = {};
+    CROSSTALK_MODULES.forEach( function ( mod ) {
+      modulesToCheckOff[ mod ] = 'not checked off';
+    });
+
     BROWSERIFY.insert = function ( src ) {
       
       let match = src.match( /^require\.define\('(assert|async|clone|config|crypto|data2xml|dateformat|env|http|https|inspect|logger|multipart|querystring|self|semver|underscore|url|uuid|xml2js)',function\(require,module,exports\)\{module\.exports = __require\('(assert|async|clone|config|crypto|data2xml|dateformat|env|http|https|inspect|logger|multipart|querystring|self|semver|underscore|url|uuid|xml2js)'\);\}\);/ );
+      
       assert( match );
       assert.equal( match[ 1 ], match[ 2 ] );
+      delete modulesToCheckOff[ match[ 1 ] ];
 
       callCount++;
       return BROWSERIFY;
@@ -235,6 +242,7 @@ describe( 'bundle()', function () {
     bundle.call( CROSSTALKIFY );
 
     assert.equal( callCount, CROSSTALK_MODULES.length );
+    assert.equal( Object.keys( modulesToCheckOff ).length, 0 );
 
   });
 
