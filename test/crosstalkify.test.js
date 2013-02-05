@@ -12,10 +12,6 @@ var assert = require( 'assert' ),
 
 describe( 'crosstalkify', function () {
 
-  it( "should be implemented", function () {
-    assert.fail();
-  });
-
   it( "should return an EventEmitter", function () {
     assert( crosstalkify() instanceof events.EventEmitter );
   });

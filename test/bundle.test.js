@@ -25,9 +25,11 @@ describe( 'bundle()', function () {
     };
 
     BROWSERIFY.addEntry = function () { return BROWSERIFY; };
-    BROWSERIFY.bundle = function () {};
+    BROWSERIFY.bundle = function () {};   
+    BROWSERIFY.errors = {};
     BROWSERIFY.ignore = function () { return BROWSERIFY; };
     BROWSERIFY.insert = function () { return BROWSERIFY; };
+    BROWSERIFY.on = function () {};
     BROWSERIFY.prepend = function () { return BROWSERIFY; };
 
     CROSSTALKIFY = {

@@ -1,10 +1,16 @@
 #! /usr/bin/env node
 
-var crosstalkify = require( '../' );
+var crosstalkify = require( '../' ),
+    fs = require( 'fs' );
 
 var argv = require( 'optimist' )
-    .usage( 'Usage: crosstalkify' )
+    .usage( 'Usage: crosstalkify {OPTIONS}' )
     .wrap( 80 )
+    .option( 'outfile', {
+      alias : 'o',
+      desc : 'Write the crosstalkify bundle to this file.\n'
+          + 'If unspecified, crosstalkify prints to stdout.'
+    })
     .option( 'directory', {
       alias : 'd',
       desc : 'Project directory to crosstalkify.\n'
@@ -24,4 +30,23 @@ var worker = crosstalkify( {
   directory : argv.directory
 });
 
-console.log( require( 'util' ).inspect( worker, false, null ) );
+if ( argv.outfile ) {
+
+  function write () {
+    
+    var src = worker.bundle();
+    if ( ! worker.ok ) return;
+    
+    fs.writeFile( argv.outfile, src );
+
+  } // write
+  
+  write();
+
+} else {
+
+  var src = worker.bundle();
+  console.log( worker );
+  if ( worker.ok ) console.log( src );
+
+} // else

@@ -37,8 +37,18 @@ var bundle = function bundle () {
        + "',function(require,module,exports){module.exports = __require('"
        + crosstalkModule + "');});" );
   });
+
+  code.on( 'syntaxError', function ( error ) {
+
+    console.error( error );
+    process.exit( 1 );
+
+  });
   
-  return '"strict mode";\n' + code.bundle();
+  var result = '"strict mode";\n' + code.bundle();
+  if ( Object.keys( code.errors ).length == 0 ) crosstalkify.ok = true;
+
+  return result;
 
 }; // bundle
 
